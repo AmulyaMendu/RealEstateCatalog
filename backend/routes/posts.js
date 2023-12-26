@@ -10,14 +10,33 @@ router.use(express.urlencoded({ extended: true }));
 router.use(express.static(path.join(__dirname, 'public')));
 // router.use(express.static(path.join(__dirname, 'public')));
 const multer = require('multer');
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, '../frontend/public/images/'); // Specify your upload directory
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
-});
+let storage;
+
+storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, path.join(__dirname, '../../frontend/public/images'));
+    },
+    filename: function (req, file, cb) {
+      cb(null,file.originalname);
+    }
+  });
+
+
+// if (process.env.NODE_ENV === 'production') {
+//   // Configure for cloud storage in production
+//   storage = multer.memoryStorage();  // Example: Use memory storage for testing
+// } else {
+//   // Configure for local storage in development
+//   storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, path.join(__dirname, '../../frontend/public/images'));
+//     },
+//     filename: function (req, file, cb) {
+//       cb(null,file.originalname);
+//     }
+//   });
+// }
+
 const upload = multer({ storage: storage 
    });
 
