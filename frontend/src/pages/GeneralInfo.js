@@ -38,7 +38,7 @@ export default function GeneralInfo() {
         formData.append('PPDPackage', form.PPDPackage);
         formData.append('image', form.image);
 
-        const response = await fetch(`https://realestatecatalog-196a9ded20a6.herokuapp.com/posts/${ID}/img`, {
+        const response = await fetch(`http://localhost:8000/posts/${ID}/img`, {
         method: "PUT",
         body: formData,
         headers: {
@@ -46,25 +46,21 @@ export default function GeneralInfo() {
             // "Accept": "application/json",
             "Authorization":`test ${token}`
         }
-    })
-
-    const data = await response.json();
-
-    setData(data);
-    settoggle(!toggle);
+    }).then((res) => res.json()).then(
+        (data) => {
+            setData(data)
+            settoggle(!toggle)
       
         localStorage.setItem('jsonwebtoken',`test ${token}`)
         if(data.status==="success"){
           alert( JSON.stringify(form))
-          console.log('Upload success:', data);
-
           
           navigateTo(`/newpage/${encodeURIComponent(people)}/${encodeURIComponent(token)}/locationinfo`,{state: ID})
         }else{
           navigateTo(`/newpage/${encodeURIComponent(people)}/${encodeURIComponent(token)}/propertyDetails`,{state: ID})
 
         }
-      }  catch (error) {
+}) } catch (error) {
   console.error('Error during file upload:', error);
  // setResponse(null); // Clear any previous response
 }
